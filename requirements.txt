@@ -1,6 +1,6 @@
 flask
 flask-cors
-edge-tts
+edge-tts>=6.1.9
 gtts
 pydub
 gunicorn
