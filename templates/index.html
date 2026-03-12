@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>हिंदी न्यूज़ वॉयसओवर पोर्टल</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --border: #2a2a40;
+    --accent: #ff6b35;
+    --accent2: #e91e8c;
+    --accent3: #00d4ff;
+    --gold: #ffd700;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --green: #00e676;
+    --red: #ff4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,107,53,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(233,30,140,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0,212,255,0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    background: rgba(10,10,15,0.9);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  header .container { display: flex; align-items: center; justify-content: space-between; }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 0 20px rgba(255,107,53,0.3);
+  }
+
+  .logo-text h1 {
+    font-size: 20px; font-weight: 700; letter-spacing: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .logo-text span { font-size: 11px; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,68,68,0.15);
+    border: 1px solid rgba(255,68,68,0.3);
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; color: var(--red);
+    letter-spacing: 1px;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  /* MAIN LAYOUT */
+  main { padding: 30px 0 60px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+
+  /* PANELS */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2);
+  }
+
+  .panel-header .icon { font-size: 18px; }
+  .panel-header h2 { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
+  .panel-header .tag {
+    margin-left: auto;
+    font-size: 10px; padding: 3px 8px;
+    border-radius: 4px; letter-spacing: 1px;
+    background: rgba(255,107,53,0.15); color: var(--accent);
+    border: 1px solid rgba(255,107,53,0.2);
+  }
+
+  /* SCRIPT AREA */
+  .script-area { padding: 16px; }
+
+  .script-toolbar {
+    display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+
+  .toolbar-btn {
+    padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text2);
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .toolbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toolbar-btn.active { background: rgba(255,107,53,0.15); border-color: var(--accent); color: var(--accent); }
+
+  textarea#script {
+    width: 100%; height: 220px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Tiro Devanagari Hindi', serif;
+    font-size: 16px; line-height: 1.8;
+    padding: 16px; resize: vertical;
+    outline: none; transition: border-color 0.2s;
+  }
+
+  textarea#script:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+  textarea#script::placeholder { color: var(--text2); font-family: 'Rajdhani', sans-serif; }
+
+  .script-stats {
+    display: flex; gap: 16px; margin-top: 10px;
+    font-size: 12px; color: var(--text2);
+  }
+
+  .script-stats span { display: flex; align-items: center; gap: 4px; }
+  .script-stats strong { color: var(--accent); }
+
+  /* VOICE GRID */
+  .voices-area { padding: 16px; }
+
+  .voice-search {
+    width: 100%; padding: 8px 14px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: 'Rajdhani',sans-serif; font-size: 14px;
+    outline: none; margin-bottom: 12px; transition: border-color 0.2s;
+  }
+  .voice-search:focus { border-color: var(--accent3); }
+
+  .voice-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; max-height: 280px; overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .voice-grid::-webkit-scrollbar { width: 4px; }
+  .voice-grid::-webkit-scrollbar-track { background: var(--bg); }
+  .voice-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .voice-card {
+    padding: 10px 12px; border-radius: 10px;
+    border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.2s;
+    background: var(--bg);
+  }
+
+  .voice-card:hover { border-color: var(--accent3); transform: translateY(-1px); }
+  .voice-card.selected { border-color: var(--accent); background: rgba(255,107,53,0.08); }
+
+  .voice-card .vname { font-size: 13px; font-weight: 600; }
+  .voice-card .vinfo { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .voice-card .vbadge {
+    display: inline-block; font-size: 10px;
+    padding: 1px 6px; border-radius: 3px; margin-top: 4px;
+  }
+  .vbadge.hi { background: rgba(255,107,53,0.2); color: var(--accent); }
+  .vbadge.en { background: rgba(0,212,255,0.15); color: var(--accent3); }
+
+  /* CONTROLS PANEL */
+  .controls-area { padding: 16px; }
+
+  .control-group { margin-bottom: 18px; }
+  .control-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 600; margin-bottom: 8px;
+    color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .control-label .val {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent); font-size: 13px; font-weight: 500;
+  }
+
+  input[type=range] {
+    width: 100%; height: 4px; -webkit-appearance: none;
+    background: var(--border); border-radius: 4px; outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 8px rgba(255,107,53,0.5);
+    cursor: pointer;
+  }
+
+  .preset-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .preset-btn {
+    padding: 5px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text2); font-family: 'Rajdhani',sans-serif;
+    font-size: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .preset-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  /* FORMAT SELECTOR */
+  .format-group { display: flex; gap: 8px; margin-top: 8px; }
+  .fmt-btn {
+    flex: 1; padding: 8px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: var(--bg);
+    color: var(--text2); font-family: 'Rajdhani',sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .fmt-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.08); }
+
+  /* EFFECTS */
+  .effects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .effect-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.2s;
+  }
+  .effect-toggle:hover { border-color: var(--accent2); }
+  .effect-toggle.on { border-color: var(--accent2); background: rgba(233,30,140,0.08); color: var(--accent2); }
+  .toggle-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border); transition: background 0.2s;
+  }
+  .effect-toggle.on .toggle-dot { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+
+  /* GENERATE BTN */
+  .generate-section { padding: 16px; border-top: 1px solid var(--border); }
+
+  .progress-bar-wrap {
+    height: 4px; background: var(--border); border-radius: 4px;
+    margin-bottom: 12px; overflow: hidden; display: none;
+  }
+  .progress-bar {
+    height: 100%; width: 0%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.3s ease;
+  }
+
+  .generate-btn {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 12px;
+    color: white; font-family: 'Rajdhani',sans-serif;
+    font-size: 18px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+    position: relative; overflow: hidden;
+  }
+  .generate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,107,53,0.4); }
+  .generate-btn:active { transform: translateY(0); }
+  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .generate-btn::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+  }
+  .generate-btn:hover::after { animation: shimmer 0.6s forwards; }
+  @keyframes shimmer { to { transform: translateX(100%); } }
+
+  /* PLAYER */
+  .player-panel {
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    display: none;
+  }
+
+  .player-header {
+    padding: 14px 20px;
+    background: linear-gradient(90deg, rgba(255,107,53,0.1), rgba(233,30,140,0.1));
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .player-header h3 { font-size: 14px; font-weight: 600; }
+  .player-header .duration { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); }
+
+  .player-body { padding: 20px; }
+
+  .waveform-wrap {
+    height: 60px; background: var(--bg); border-radius: 8px;
+    margin-bottom: 16px; overflow: hidden; position: relative;
+    display: flex; align-items: center; padding: 0 10px; gap: 2px;
+    cursor: pointer;
+  }
+
+  .waveform-bar {
+    flex: 1; border-radius: 2px;
+    background: var(--border); min-width: 2px;
+    transition: background 0.3s;
+  }
+  .waveform-bar.active { background: var(--accent); }
+  .waveform-bar.played { background: rgba(255,107,53,0.4); }
+
+  .player-controls { display: flex; align-items: center; gap: 12px; }
+
+  .ctrl-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text); cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .ctrl-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  .play-btn {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; font-size: 18px;
+    box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+  }
+  .play-btn:hover { box-shadow: 0 6px 20px rgba(255,107,53,0.5); border: none; }
+
+  .time-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--text2); margin-left: auto;
+  }
+
+  .download-row {
+    display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;
+  }
+
+  .dl-btn {
+    flex: 1; padding: 10px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--bg);
+    color: var(--text); font-family: 'Rajdhani',sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    text-decoration: none;
+  }
+  .dl-btn.primary { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.08); }
+  .dl-btn.primary:hover { background: rgba(0,230,118,0.15); transform: translateY(-1px); }
+  .dl-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  /* STATUS */
+  #status {
+    margin-top: 12px; padding: 10px 14px;
+    border-radius: 8px; font-size: 13px; font-weight: 500;
+    display: none; border: 1px solid; text-align: center;
+  }
+  #status.info { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.3); color: var(--accent3); }
+  #status.success { background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.3); color: var(--green); }
+  #status.error { background: rgba(255,68,68,0.1); border-color: rgba(255,68,68,0.3); color: var(--red); }
+
+  /* SAMPLE NEWS */
+  .samples-area { padding: 16px; border-top: 1px solid var(--border); }
+  .samples-area h3 { font-size: 13px; color: var(--text2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .sample-item {
+    padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
+    font-size: 13px; line-height: 1.5;
+  }
+  .sample-item:hover { border-color: var(--accent); color: var(--accent); }
+  .sample-item strong { color: var(--gold); font-size: 11px; display: block; margin-bottom: 4px; letter-spacing: 1px; }
+
+
+
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    .voice-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">📻</div>
+      <div class="logo-text">
+        <h1>हिंदी वॉयसओवर पोर्टल</h1>
+        <span>Hindi News TTS Studio</span>
+      </div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE STUDIO
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <!-- SCRIPT PANEL -->
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-header">
+            <span class="icon">📝</span>
+            <h2>न्यूज़ स्क्रिप्ट</h2>
+            <span class="tag">SCRIPT EDITOR</span>
+          </div>
+          <div class="script-area">
+            <div class="script-toolbar">
+              <button class="toolbar-btn" onclick="clearScript()">🗑️ साफ़ करें</button>
+              <button class="toolbar-btn" onclick="loadSample(0)">📰 ब्रेकिंग न्यूज़</button>
+              <button class="toolbar-btn" onclick="loadSample(1)">🏏 खेल समाचार</button>
+              <button class="toolbar-btn" onclick="loadSample(2)">💹 बिज़नेस</button>
+              <button class="toolbar-btn" onclick="loadSample(3)">🌡️ मौसम</button>
+            </div>
+            <textarea id="script" placeholder="यहाँ अपनी हिंदी न्यूज़ स्क्रिप्ट लिखें...
+
+उदाहरण: नमस्कार, आप देख रहे हैं आज की प्रमुख खबरें..."></textarea>
+            <div class="script-stats">
+              <span>📊 शब्द: <strong id="wordCount">0</strong></span>
+              <span>⏱️ अनुमानित समय: <strong id="estTime">0:00</strong></span>
+              <span>📝 अक्षर: <strong id="charCount">0</strong></span>
+            </div>
+          </div>
+
+          <!-- SAMPLE NEWS -->
+          <div class="samples-area">
+            <h3>🔥 Sample न्यूज़ टेम्पलेट</h3>
+            <div class="sample-item" onclick="loadSample(0)">
+              <strong>BREAKING NEWS</strong>
+              नई दिल्ली: आज देश की राजधानी में एक बड़ी खबर सामने आई है...
+            </div>
+            <div class="sample-item" onclick="loadSample(1)">
+              <strong>SPORTS</strong>
+              भारत ने ऑस्ट्रेलिया के खिलाफ टेस्ट सीरीज़ में शानदार जीत दर्ज की है...
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAYER -->
+        <div class="player-panel" id="playerPanel">
+          <div class="player-header">
+            <span>🎧</span>
+            <h3>ऑडियो प्लेयर</h3>
+            <span class="duration" id="audioDuration">--:--</span>
+          </div>
+          <div class="player-body">
+            <div class="waveform-wrap" id="waveform" onclick="seekAudio(event)">
+              <!-- bars filled by JS -->
+            </div>
+            <div class="player-controls">
+              <button class="ctrl-btn" onclick="skipTime(-10)" title="10 सेकंड पीछे">⏮</button>
+              <button class="ctrl-btn play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+              <button class="ctrl-btn" onclick="skipTime(10)" title="10 सेकंड आगे">⏭</button>
+              <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1"
+                style="width:80px;margin-left:4px" onchange="setVolume(this.value)" title="Volume">
+              <span>🔊</span>
+              <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            </div>
+            <div class="download-row">
+              <a class="dl-btn primary" id="dlWav" href="#" download="hindi_news.wav">
+                ⬇️ WAV डाउनलोड
+              </a>
+              <a class="dl-btn" id="dlOgg" href="#" download="hindi_news.ogg">
+                ⬇️ OGG डाउनलोड
+              </a>
+              <button class="dl-btn" onclick="convertToMp3Download()">
+                ⬇️ MP3 (Convert)
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+
+        <!-- VOICE SELECTION -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-header">
+            <span class="icon">🎙️</span>
+            <h2>आवाज़ चुनें</h2>
+            <span class="tag">VOICES</span>
+          </div>
+          <div class="voices-area">
+            <input type="text" class="voice-search" placeholder="🔍 आवाज़ खोजें..." oninput="filterVoices(this.value)">
+            <div class="voice-grid" id="voiceGrid"></div>
+          </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="icon">🎛️</span>
+            <h2>आवाज़ नियंत्रण</h2>
+            <span class="tag">CONTROLS</span>
+          </div>
+          <div class="controls-area">
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>🚀 Speed (गति)</span>
+                <span class="val" id="speedVal">1.0x</span>
+              </div>
+              <input type="range" id="speed" min="0.5" max="2.0" step="0.05" value="1.0"
+                oninput="updateVal('speed','speedVal','x')">
+              <div class="preset-btns">
+                <button class="preset-btn" onclick="setSlider('speed',0.75,'speedVal','x')">धीमा</button>
+                <button class="preset-btn" onclick="setSlider('speed',1.0,'speedVal','x')">सामान्य</button>
+                <button class="preset-btn" onclick="setSlider('speed',1.25,'speedVal','x')">तेज़</button>
+                <button class="preset-btn" onclick="setSlider('speed',1.5,'speedVal','x')">बहुत तेज़</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>🎵 Pitch (स्वर)</span>
+                <span class="val" id="pitchVal">0 Hz</span>
+              </div>
+              <input type="range" id="pitch" min="-50" max="50" step="5" value="0"
+                oninput="updateVal('pitch','pitchVal',' Hz')">
+              <div class="preset-btns">
+                <button class="preset-btn" onclick="setSlider('pitch',-20,'pitchVal',' Hz')">गहरा</button>
+                <button class="preset-btn" onclick="setSlider('pitch',0,'pitchVal',' Hz')">सामान्य</button>
+                <button class="preset-btn" onclick="setSlider('pitch',20,'pitchVal',' Hz')">ऊँचा</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>🔊 Volume (आवाज़)</span>
+                <span class="val" id="volumeVal">100%</span>
+              </div>
+              <input type="range" id="volume" min="0" max="200" step="5" value="100"
+                oninput="document.getElementById('volumeVal').textContent=this.value+'%'">
+            </div>
+
+            <hr class="divider">
+
+            <div class="control-group">
+              <div class="control-label"><span>⏸️ Pause (विराम)</span><span class="val" id="pauseVal">मध्यम</span></div>
+              <input type="range" id="pauseLevel" min="1" max="5" step="1" value="3"
+                oninput="updatePauseLabel(this.value)">
+            </div>
+
+            <hr class="divider">
+
+            <div class="control-label" style="margin-bottom:8px"><span>✨ प्रभाव (Effects)</span></div>
+            <div class="effects-grid">
+              <div class="effect-toggle" id="eff-normalize" onclick="toggleEffect('normalize')">
+                <div class="toggle-dot"></div> Normalize
+              </div>
+              <div class="effect-toggle" id="eff-studio" onclick="toggleEffect('studio')">
+                <div class="toggle-dot"></div> Studio
+              </div>
+              <div class="effect-toggle" id="eff-broadcast" onclick="toggleEffect('broadcast')">
+                <div class="toggle-dot"></div> Broadcast
+              </div>
+              <div class="effect-toggle" id="eff-echo" onclick="toggleEffect('echo')">
+                <div class="toggle-dot"></div> Echo
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="control-label" style="margin-bottom:8px"><span>💾 फ़ॉर्मेट</span></div>
+            <div class="format-group">
+              <button class="fmt-btn selected" data-fmt="wav" onclick="selectFormat(this,'wav')">WAV</button>
+              <button class="fmt-btn" data-fmt="ogg" onclick="selectFormat(this,'ogg')">OGG</button>
+              <button class="fmt-btn" data-fmt="mp3" onclick="selectFormat(this,'mp3')">MP3*</button>
+            </div>
+            <p style="font-size:11px;color:var(--text2);margin-top:6px">*MP3 = browser में convert होगा</p>
+
+            <hr class="divider">
+
+            <div class="control-label" style="margin-bottom:8px"><span>⚙️ TTS Engine</span></div>
+            <div class="format-group">
+              <button class="fmt-btn selected" id="eng-edge" onclick="selectEngine('edge')">Edge TTS ⭐</button>
+              <button class="fmt-btn" id="eng-gtts" onclick="selectEngine('gtts')">gTTS (Google)</button>
+            </div>
+            <p style="font-size:11px;color:var(--text2);margin-top:6px">⭐ Edge TTS = सबसे अच्छी Hindi आवाज़</p>
+
+          </div>
+
+          <!-- GENERATE -->
+          <div class="generate-section">
+            <div class="progress-bar-wrap" id="progressWrap">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <button class="generate-btn" id="generateBtn" onclick="generateVoiceover()">
+              🎙️ वॉयसओवर बनाएं
+            </button>
+            <div id="status"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<audio id="audioEl" style="display:none"></audio>
+
+<script>
+// ===== DATA =====
+const VOICES = [
+  // Hindi voices
+  {id:'hi-IN-SwaraNeural',   name:'Swara',   lang:'hi', gender:'♀', desc:'प्राकृतिक महिला', engine:'edge'},
+  {id:'hi-IN-MadhurNeural',  name:'Madhur',  lang:'hi', gender:'♂', desc:'न्यूज़ पुरुष',   engine:'edge'},
+  {id:'hi-IN-AaravNeural',   name:'Aarav',   lang:'hi', gender:'♂', desc:'युवा पुरुष',     engine:'edge'},
+  {id:'hi-IN-AnanyaNeural',  name:'Ananya',  lang:'hi', gender:'♀', desc:'फ्रेश महिला',   engine:'edge'},
+  {id:'hi-IN-KavyaNeural',   name:'Kavya',   lang:'hi', gender:'♀', desc:'न्यूज़ महिला',  engine:'edge'},
+  {id:'hi-IN-RehaanNeural',  name:'Rehaan',  lang:'hi', gender:'♂', desc:'डीप पुरुष',     engine:'edge'},
+  {id:'hi-IN-NeerjaNeural',  name:'Neerja',  lang:'hi', gender:'♀', desc:'क्लासिक महिला', engine:'edge'},
+  {id:'hi-IN-PrabhatNeural', name:'Prabhat', lang:'hi', gender:'♂', desc:'औपचारिक पुरुष', engine:'edge'},
+  {id:'hi-IN-BabiNeural',    name:'Babi',    lang:'hi', gender:'♀', desc:'मृदु महिला',    engine:'edge'},
+  {id:'hi-IN-DivyaNeural',   name:'Divya',   lang:'hi', gender:'♀', desc:'चमकदार महिला', engine:'edge'},
+  // Google Hindi
+  {id:'gtts-hi',             name:'Google HI', lang:'hi', gender:'♀', desc:'Google TTS',  engine:'gtts'},
+  // Fallback browser
+  {id:'browser-hi',          name:'Browser HI',lang:'hi', gender:'⚡', desc:'System Voice', engine:'browser'},
+];
+
+const SAMPLES = [
+  `नमस्कार, आप देख रहे हैं आज की प्रमुख खबरें।
+
+मुख्य समाचार: आज प्रधानमंत्री नरेंद्र मोदी ने नई दिल्ली में एक अहम बैठक की अध्यक्षता की, जिसमें देश की आर्थिक स्थिति पर विस्तार से चर्चा हुई। सूत्रों के अनुसार, इस बैठक में कई महत्वपूर्ण फैसले लिए गए हैं।
+
+अन्य खबरों में: मुंबई में आज भारी बारिश के कारण यातायात प्रभावित हुआ। बृहन्मुंबई नगर पालिका ने लोगों से घरों में रहने की अपील की है।
+
+यही था आज का न्यूज़ बुलेटिन। देखते रहिए हमारे साथ, नमस्कार।`,
+
+  `खेल समाचार: भारतीय क्रिकेट टीम ने ऑस्ट्रेलिया के विरुद्ध तीसरे टेस्ट मैच में शानदार प्रदर्शन करते हुए पारी और पचास रन से जीत दर्ज की। 
+
+विराट कोहली ने इस मैच में एक शतक और एक अर्धशतक जमाया। जसप्रीत बुमराह ने गेंदबाज़ी में दस विकेट लेकर मैन ऑफ द मैच का खिताब जीता।
+
+भारत अब सीरीज़ में दो-शून्य से आगे है और अगला मैच मेलबर्न में खेला जाएगा।`,
+
+  `बिज़नेस न्यूज़: आज शेयर बाज़ार में जोरदार तेज़ी देखी गई। सेंसेक्स एक हज़ार अंकों की उछाल के साथ पचहत्तर हज़ार के पार चला गया।
+
+रिलायंस इंडस्ट्रीज़, टाटा कंसल्टेंसी सर्विसेज़ और इन्फोसिस के शेयरों में सबसे अधिक बढ़त देखी गई। विशेषज्ञों का मानना है कि वैश्विक बाज़ारों में मज़बूती के कारण भारतीय बाज़ार को सहारा मिला है।`,
+
+  `मौसम विभाग की चेतावनी: अगले चौबीस घंटों में उत्तर भारत के कई राज्यों में भारी बारिश और आंधी-तूफान की संभावना है।
+
+दिल्ली, उत्तर प्रदेश, हरियाणा और पंजाब में येलो अलर्ट जारी किया गया है। लोगों से अनुरोध है कि वे ज़रूरी काम के बिना घर से बाहर न निकलें और बिजली के खंभों से दूर रहें।
+
+तापमान में भी गिरावट आने का अनुमान है।`
+];
+
+let selectedVoice = 'hi-IN-SwaraNeural';
+let selectedFormat = 'wav';
+let selectedEngine = 'edge';
+let activeEffects = new Set();
+let audioBlob = null;
+let audioUrl = null;
+let waveInterval = null;
+let allVoices = [];
+
+// ===== INIT =====
+window.onload = () => {
+  renderVoices(VOICES);
+  loadSample(0);
+  updateStats();
+  
+  // Get browser speech voices
+  if ('speechSynthesis' in window) {
+    speechSynthesis.onvoiceschanged = loadBrowserVoices;
+    loadBrowserVoices();
+  }
+  
+  // Script listener
+  document.getElementById('script').addEventListener('input', updateStats);
+};
+
+function loadBrowserVoices() {
+  const bv = speechSynthesis.getVoices();
+  const hiVoices = bv.filter(v => v.lang.startsWith('hi') || v.lang.startsWith('en-IN'));
+  const extra = hiVoices.map(v => ({
+    id: 'browser-' + v.voiceURI,
+    name: v.name.substring(0,16),
+    lang: v.lang.startsWith('hi') ? 'hi' : 'en',
+    gender: '⚡', desc: 'System Voice', engine: 'browser',
+    _voice: v
+  }));
+  allVoices = [...VOICES, ...extra.filter(e => !VOICES.find(v => v.id === e.id))];
+  renderVoices(allVoices);
+}
+
+// ===== VOICES =====
+function renderVoices(voices) {
+  const grid = document.getElementById('voiceGrid');
+  grid.innerHTML = voices.map(v => `
+    <div class="voice-card ${v.id === selectedVoice ? 'selected' : ''}"
+         onclick="selectVoice('${v.id}')">
+      <div class="vname">${v.gender} ${v.name}</div>
+      <div class="vinfo">${v.desc}</div>
+      <span class="vbadge ${v.lang}">${v.lang.toUpperCase()}</span>
+    </div>
+  `).join('');
+}
+
+function selectVoice(id) {
+  selectedVoice = id;
+  document.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+}
+
+function filterVoices(q) {
+  const vlist = allVoices.length ? allVoices : VOICES;
+  const filtered = q ? vlist.filter(v => 
+    v.name.toLowerCase().includes(q.toLowerCase()) ||
+    v.desc.includes(q) || v.lang.includes(q)
+  ) : vlist;
+  renderVoices(filtered);
+}
+
+// ===== CONTROLS =====
+function updateVal(id, labelId, suffix) {
+  const v = document.getElementById(id).value;
+  document.getElementById(labelId).textContent = v + suffix;
+}
+
+function setSlider(id, val, labelId, suffix) {
+  document.getElementById(id).value = val;
+  document.getElementById(labelId).textContent = val + suffix;
+}
+
+const pauseLabels = ['','बहुत कम','कम','मध्यम','अधिक','बहुत अधिक'];
+function updatePauseLabel(v) {
+  document.getElementById('pauseVal').textContent = pauseLabels[v] || v;
+}
+
+function toggleEffect(name) {
+  const el = document.getElementById('eff-'+name);
+  if (activeEffects.has(name)) {
+    activeEffects.delete(name);
+    el.classList.remove('on');
+  } else {
+    activeEffects.add(name);
+    el.classList.add('on');
+  }
+}
+
+function selectFormat(btn, fmt) {
+  selectedFormat = fmt;
+  document.querySelectorAll('.fmt-btn[data-fmt]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function selectEngine(eng) {
+  selectedEngine = eng;
+  ['gtts','edge'].forEach(e => {
+    document.getElementById('eng-'+e)?.classList.remove('selected');
+  });
+  document.getElementById('eng-'+eng)?.classList.add('selected');
+}
+
+// ===== SCRIPT =====
+function clearScript() { document.getElementById('script').value = ''; updateStats(); }
+
+function loadSample(i) {
+  document.getElementById('script').value = SAMPLES[i] || '';
+  updateStats();
+}
+
+function updateStats() {
+  const text = document.getElementById('script').value;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const chars = text.length;
+  const speed = parseFloat(document.getElementById('speed').value) || 1;
+  const secs = Math.round((words / 2.5) / speed); // ~2.5 Hindi words/sec
+  const m = Math.floor(secs/60), s = secs%60;
+  document.getElementById('wordCount').textContent = words;
+  document.getElementById('charCount').textContent = chars;
+  document.getElementById('estTime').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+// ===== GENERATE =====
+async function generateVoiceover() {
+  const text = document.getElementById('script').value.trim();
+  if (!text) { showStatus('कृपया पहले स्क्रिप्ट लिखें!', 'error'); return; }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true; btn.textContent = '⏳ बन रहा है...';
+  showStatus('आवाज़ तैयार हो रही है... कृपया प्रतीक्षा करें।', 'info');
+  showProgress(true);
+
+  try {
+    await generateServerTTS(text);
+  } catch(e) {
+    console.error(e);
+    showStatus('❌ Error: ' + e.message + ' — कृपया दोबारा कोशिश करें।', 'error');
+  }
+
+  btn.disabled = false; btn.textContent = '🎙️ वॉयसओवर बनाएं';
+  showProgress(false);
+}
+
+// Browser SpeechSynthesis → record to AudioContext
+async function generateBrowserTTS(text) {
+  updateProgress(20);
+  
+  if (!('speechSynthesis' in window)) throw new Error('Browser does not support TTS');
+
+  const speed = parseFloat(document.getElementById('speed').value);
+  const pitch = parseFloat(document.getElementById('pitch').value);
+  const volume = parseFloat(document.getElementById('volume').value) / 100;
+
+  // Find the selected voice
+  const voices = speechSynthesis.getVoices();
+  let selVoice = null;
+  if (selectedVoice.startsWith('browser-')) {
+    const uri = selectedVoice.replace('browser-','');
+    selVoice = voices.find(v => v.voiceURI === uri);
+  }
+  if (!selVoice) {
+    selVoice = voices.find(v => v.lang.startsWith('hi')) || 
+               voices.find(v => v.lang.startsWith('en-IN')) ||
+               voices[0];
+  }
+
+  updateProgress(40);
+
+  // Use AudioContext to capture speech output
+  try {
+    const blob = await recordSpeechToBlob(text, selVoice, speed, pitch, volume);
+    audioBlob = blob;
+    audioUrl = URL.createObjectURL(blob);
+    setupPlayer(audioUrl, blob);
+    showStatus('✅ वॉयसओवर तैयार है! डाउनलोड करें।', 'success');
+    updateProgress(100);
+  } catch(e) {
+    // Fallback: just play it without recording
+    playSpeechDirect(text, selVoice, speed, pitch, volume);
+    showStatus('✅ आवाज़ तैयार है! (Play करें)', 'success');
+    updateProgress(100);
+  }
+}
+
+function playSpeechDirect(text, voice, rate, pitch, volume) {
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  if (voice) utt.voice = voice;
+  utt.rate = Math.min(Math.max(rate, 0.1), 10);
+  utt.pitch = 1 + (pitch / 50);
+  utt.volume = volume;
+  utt.lang = 'hi-IN';
+  speechSynthesis.speak(utt);
+  
+  // Show minimal player with play controls
+  document.getElementById('playerPanel').style.display = 'block';
+  document.getElementById('playBtn').textContent = '⏸';
+  document.getElementById('audioDuration').textContent = document.getElementById('estTime').textContent;
+  buildWaveform(null);
+  
+  utt.onend = () => { document.getElementById('playBtn').textContent = '▶'; };
+  document.getElementById('playBtn').onclick = () => {
+    if (speechSynthesis.speaking) { speechSynthesis.cancel(); document.getElementById('playBtn').textContent = '▶'; }
+    else { speechSynthesis.speak(utt); document.getElementById('playBtn').textContent = '⏸'; }
+  };
+}
+
+async function recordSpeechToBlob(text, voice, rate, pitch, volume) {
+  return new Promise((resolve, reject) => {
+    // Create a MediaStreamDestination for recording
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const dest = ctx.createMediaStreamDestination();
+    
+    // We can't directly capture speech synthesis in most browsers
+    // Instead we'll use an oscillator approach to generate a WAV
+    // This is a client-side WAV synthesis based on the text
+    
+    const recorder = new MediaRecorder(dest.stream);
+    const chunks = [];
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, {type:'audio/ogg; codecs=opus'});
+      resolve(blob);
+    };
+    
+    // Use SpeechSynthesis with recording
+    const utt = new SpeechSynthesisUtterance(text);
+    if (voice) utt.voice = voice;
+    utt.rate = Math.min(Math.max(rate, 0.1), 10);
+    utt.pitch = 1 + (pitch/50);
+    utt.volume = volume;
+    utt.lang = 'hi-IN';
+    
+    let started = false;
+    utt.onstart = () => { 
+      if (!started) { recorder.start(); started = true; }
+    };
+    utt.onend = () => { 
+      setTimeout(() => { recorder.stop(); ctx.close(); }, 500); 
+    };
+    utt.onerror = (e) => reject(new Error(e.error));
+    
+    recorder.start(); // Start anyway
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utt);
+    
+    // Timeout safety
+    setTimeout(() => { 
+      if (recorder.state === 'recording') { recorder.stop(); ctx.close(); }
+    }, 120000);
+  });
+}
+
+async function generateServerTTS(text) {
+  const speed = document.getElementById('speed').value;
+  const pitch = document.getElementById('pitch').value;
+  const volume = document.getElementById('volume').value;
+  const pauseLevel = document.getElementById('pauseLevel').value;
+
+  updateProgress(20);
+
+  const response = await fetch('/api/generate', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      text,
+      voice: selectedVoice,
+      speed: parseFloat(speed),
+      pitch: parseInt(pitch),
+      volume: parseFloat(volume) / 100,
+      format: selectedFormat === 'mp3' ? 'mp3' : selectedFormat,
+      engine: selectedEngine,
+      pause_level: parseInt(pauseLevel),
+      effects: {
+        normalize: activeEffects.has('normalize'),
+        broadcast: activeEffects.has('broadcast'),
+        studio: activeEffects.has('studio'),
+        echo: activeEffects.has('echo')
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(()=>({error:'Server error'}));
+    throw new Error(err.error || 'Server error: ' + response.status);
+  }
+
+  updateProgress(80);
+  audioBlob = await response.blob();
+  audioUrl = URL.createObjectURL(audioBlob);
+  setupPlayer(audioUrl, audioBlob);
+  showStatus('✅ वॉयसओवर तैयार है! डाउनलोड करें।', 'success');
+  updateProgress(100);
+}
+
+// ===== PLAYER =====
+function setupPlayer(url, blob) {
+  const audio = document.getElementById('audioEl');
+  audio.src = url;
+  
+  document.getElementById('playerPanel').style.display = 'block';
+  
+  audio.onloadedmetadata = () => {
+    const dur = audio.duration;
+    const m = Math.floor(dur/60), s = Math.floor(dur%60);
+    document.getElementById('audioDuration').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  };
+  
+  audio.ontimeupdate = updateTimeDisplay;
+  
+  buildWaveform(null);
+  
+  // Set download links
+  const ext = blob.type.includes('ogg') ? 'ogg' : 'wav';
+  const dlUrl = URL.createObjectURL(blob);
+  document.getElementById('dlWav').href = dlUrl;
+  document.getElementById('dlWav').download = `hindi_news_${Date.now()}.${ext}`;
+  document.getElementById('dlOgg').href = dlUrl;
+  document.getElementById('dlOgg').download = `hindi_news_${Date.now()}.ogg`;
+  
+  // Restore play button
+  document.getElementById('playBtn').onclick = togglePlay;
+  document.getElementById('playBtn').textContent = '▶';
+}
+
+function buildWaveform(audioBuffer) {
+  const wrap = document.getElementById('waveform');
+  wrap.innerHTML = '';
+  const n = 80;
+  for (let i = 0; i < n; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    const h = audioBuffer ? 10 : (15 + Math.random()*35);
+    bar.style.height = h + 'px';
+    wrap.appendChild(bar);
+  }
+}
+
+function updateTimeDisplay() {
+  const audio = document.getElementById('audioEl');
+  const cur = audio.currentTime, dur = audio.duration || 1;
+  const pct = cur / dur;
+  const bars = document.querySelectorAll('.waveform-bar');
+  bars.forEach((b, i) => {
+    b.classList.remove('active','played');
+    const bp = i / bars.length;
+    if (Math.abs(bp - pct) < 0.013) b.classList.add('active');
+    else if (bp < pct) b.classList.add('played');
+  });
+  const fm = t => `${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
+  document.getElementById('timeDisplay').textContent = `${fm(cur)} / ${fm(dur)}`;
+}
+
+function togglePlay() {
+  const audio = document.getElementById('audioEl');
+  const btn = document.getElementById('playBtn');
+  if (audio.paused) { audio.play(); btn.textContent = '⏸'; }
+  else { audio.pause(); btn.textContent = '▶'; }
+}
+
+function skipTime(s) {
+  const audio = document.getElementById('audioEl');
+  audio.currentTime = Math.max(0, Math.min(audio.duration||0, audio.currentTime+s));
+}
+
+function setVolume(v) {
+  document.getElementById('audioEl').volume = parseFloat(v);
+}
+
+function seekAudio(e) {
+  const audio = document.getElementById('audioEl');
+  if (!audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+// ===== MP3 CONVERT =====
+function convertToMp3Download() {
+  if (!audioBlob) { showStatus('पहले वॉयसओवर बनाएं', 'error'); return; }
+  // Direct download of the blob (browser will handle format)
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(audioBlob);
+  a.download = `hindi_news_${Date.now()}.wav`;
+  a.click();
+  showStatus('📥 WAV फ़ाइल डाउनलोड हो रही है (MP3 के लिए Python backend use करें)', 'info');
+}
+
+// ===== UI HELPERS =====
+function showStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg; el.className = type; el.style.display = 'block';
+  if (type === 'success') setTimeout(()=>el.style.display='none', 4000);
+}
+
+function showProgress(show) {
+  document.getElementById('progressWrap').style.display = show ? 'block' : 'none';
+  if (!show) document.getElementById('progressBar').style.width = '0%';
+}
+
+function updateProgress(pct) {
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+
+</script>
+
+</body>
+</html>
