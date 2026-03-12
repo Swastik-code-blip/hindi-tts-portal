@@ -1,6 +1,4 @@
-"""
-Hindi News TTS Portal - All 12 Hindi Voices
-"""
+
 
 from flask import Flask, request, send_file, jsonify, render_template
 from flask_cors import CORS
@@ -28,23 +26,57 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)
 
-# All 12 confirmed Microsoft Hindi voices
+# All Hindi voices with gTTS fallback params for variety
 HINDI_VOICES = {
-    "hi-IN-SwaraNeural":   {"name": "Swara",   "gender": "Female", "desc": "प्राकृतिक महिला",  "tld": "co.in",  "slow": False, "speed": 1.0,  "pitch_shift": 0},
-    "hi-IN-MadhurNeural":  {"name": "Madhur",  "gender": "Male",   "desc": "न्यूज़ पुरुष",    "tld": "co.in",  "slow": False, "speed": 0.95, "pitch_shift": -3},
-    "hi-IN-AaravNeural":   {"name": "Aarav",   "gender": "Male",   "desc": "युवा पुरुष",      "tld": "com",    "slow": False, "speed": 1.05, "pitch_shift": -2},
-    "hi-IN-AnanyaNeural":  {"name": "Ananya",  "gender": "Female", "desc": "फ्रेश महिला",    "tld": "com.au", "slow": False, "speed": 1.1,  "pitch_shift": 2},
-    "hi-IN-KavyaNeural":   {"name": "Kavya",   "gender": "Female", "desc": "न्यूज़ महिला",   "tld": "co.uk",  "slow": False, "speed": 1.0,  "pitch_shift": 1},
-    "hi-IN-RehaanNeural":  {"name": "Rehaan",  "gender": "Male",   "desc": "डीप पुरुष",      "tld": "co.in",  "slow": True,  "speed": 0.9,  "pitch_shift": -4},
-    "hi-IN-AasthiNeural":  {"name": "Aasthi",  "gender": "Female", "desc": "सॉफ्ट महिला",   "tld": "co.in",  "slow": False, "speed": 1.0,  "pitch_shift": 1},
-    "hi-IN-HemantNeural":  {"name": "Hemant",  "gender": "Male",   "desc": "गंभीर पुरुष",   "tld": "com",    "slow": False, "speed": 0.92, "pitch_shift": -3},
-    "hi-IN-PrabhatNeural": {"name": "Prabhat", "gender": "Male",   "desc": "औपचारिक पुरुष",  "tld": "com",    "slow": False, "speed": 0.9,  "pitch_shift": -2},
-    "hi-IN-NeerjaNeural":  {"name": "Neerja",  "gender": "Female", "desc": "एक्सप्रेसिव",   "tld": "co.in",  "slow": True,  "speed": 0.95, "pitch_shift": 1},
-    "hi-IN-ShubhNeural":   {"name": "Shubh",   "gender": "Male",   "desc": "शुभ पुरुष",     "tld": "co.in",  "slow": False, "speed": 1.0,  "pitch_shift": -1},
-    "hi-IN-RukminiNeural": {"name": "Rukmini", "gender": "Female", "desc": "क्लासिक महिला",  "tld": "co.uk",  "slow": False, "speed": 0.98, "pitch_shift": 0},
+    "hi-IN-SwaraNeural":   {"name": "Swara",   "gender": "Female", "desc": "प्राकृतिक महिला",  "tld": "co.in",  "slow": False, "speed": 1.0,  "pitch": 0},
+    "hi-IN-MadhurNeural":  {"name": "Madhur",  "gender": "Male",   "desc": "न्यूज़ पुरुष",    "tld": "co.in",  "slow": False, "speed": 0.92, "pitch": -5},
+    "hi-IN-AaravNeural":   {"name": "Aarav",   "gender": "Male",   "desc": "युवा पुरुष",      "tld": "com",    "slow": False, "speed": 1.08, "pitch": -3},
+    "hi-IN-AnanyaNeural":  {"name": "Ananya",  "gender": "Female", "desc": "फ्रेश महिला",    "tld": "com.au", "slow": False, "speed": 1.12, "pitch": 3},
+    "hi-IN-KavyaNeural":   {"name": "Kavya",   "gender": "Female", "desc": "न्यूज़ महिला",   "tld": "co.uk",  "slow": False, "speed": 1.0,  "pitch": 2},
+    "hi-IN-RehaanNeural":  {"name": "Rehaan",  "gender": "Male",   "desc": "डीप पुरुष",      "tld": "co.in",  "slow": True,  "speed": 0.88, "pitch": -6},
+    "hi-IN-AasthiNeural":  {"name": "Aasthi",  "gender": "Female", "desc": "सॉफ्ट महिला",   "tld": "co.in",  "slow": True,  "speed": 0.95, "pitch": 2},
+    "hi-IN-HemantNeural":  {"name": "Hemant",  "gender": "Male",   "desc": "गंभीर पुरुष",   "tld": "com",    "slow": False, "speed": 0.90, "pitch": -4},
+    "hi-IN-PrabhatNeural": {"name": "Prabhat", "gender": "Male",   "desc": "औपचारिक पुरुष",  "tld": "com",    "slow": False, "speed": 0.93, "pitch": -3},
+    "hi-IN-NeerjaNeural":  {"name": "Neerja",  "gender": "Female", "desc": "एक्सप्रेसिव",   "tld": "co.in",  "slow": True,  "speed": 0.96, "pitch": 1},
+    "hi-IN-ShubhNeural":   {"name": "Shubh",   "gender": "Male",   "desc": "शुभ पुरुष",     "tld": "co.in",  "slow": False, "speed": 1.0,  "pitch": -2},
+    "hi-IN-RukminiNeural": {"name": "Rukmini", "gender": "Female", "desc": "क्लासिक महिला",  "tld": "co.uk",  "slow": False, "speed": 0.97, "pitch": 1},
+    "hi-IN-BabiNeural":    {"name": "Babi",    "gender": "Female", "desc": "मृदु महिला",    "tld": "com.au", "slow": True,  "speed": 0.94, "pitch": 3},
+    "hi-IN-DivyaNeural":   {"name": "Divya",   "gender": "Female", "desc": "चमकदार महिला",  "tld": "co.uk",  "slow": False, "speed": 1.15, "pitch": 4},
 }
 
 DEFAULT_VOICE = "hi-IN-SwaraNeural"
+
+# Cache working voices after first test
+_working_edge_voices = None
+
+
+async def _test_voice(voice_id):
+    """Test if a voice works on Edge TTS"""
+    try:
+        communicate = edge_tts.Communicate(text="नमस्ते", voice=voice_id)
+        buf = io.BytesIO()
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                buf.write(chunk["data"])
+        return buf.getbuffer().nbytes > 500
+    except:
+        return False
+
+
+async def _get_working_voices():
+    """Test all voices and return working ones"""
+    global _working_edge_voices
+    if _working_edge_voices is not None:
+        return _working_edge_voices
+    
+    results = {}
+    for vid in HINDI_VOICES.keys():
+        works = await _test_voice(vid)
+        results[vid] = works
+        print(f"Voice {vid}: {'✅' if works else '❌'}")
+    
+    _working_edge_voices = results
+    return results
 
 
 @app.route('/')
@@ -66,27 +98,18 @@ def get_voices():
 
 @app.route('/api/test-voices', methods=['GET'])
 def test_voices():
-    """Test which Edge TTS voices actually work on this server"""
-    results = {}
-    test_text = "नमस्ते"
-    
-    async def test_one(voice_id):
-        try:
-            communicate = edge_tts.Communicate(text=test_text, voice=voice_id)
-            buf = io.BytesIO()
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    buf.write(chunk["data"])
-            return buf.getbuffer().nbytes > 0
-        except:
-            return False
-
-    if EDGE_AVAILABLE:
-        for vid in HINDI_VOICES.keys():
-            works = asyncio.run(test_one(vid))
-            results[vid] = "✅ works" if works else "❌ failed"
-    
-    return jsonify(results)
+    """Test which voices work - open this URL to check"""
+    if not EDGE_AVAILABLE:
+        return jsonify({"error": "edge-tts not installed"})
+    results = asyncio.run(_get_working_voices())
+    working = [k for k, v in results.items() if v]
+    failing = [k for k, v in results.items() if not v]
+    return jsonify({
+        "working": working,
+        "failing": failing,
+        "total_working": len(working),
+        "total_failing": len(failing)
+    })
 
 
 @app.route('/api/generate', methods=['POST'])
@@ -100,7 +123,7 @@ def generate_tts():
         volume      = float(data.get('volume', 1.0))
         fmt         = data.get('format', 'wav').lower()
         engine      = data.get('engine', 'edge').lower()
-        effects     = data.get('effects', {}  )
+        effects     = data.get('effects', {})
         pause_level = int(data.get('pause_level', 3))
 
         if not text:
@@ -114,18 +137,18 @@ def generate_tts():
         voice_info = HINDI_VOICES[voice]
         audio = None
 
-        # Try Edge TTS first
+        # Try Edge TTS
         if engine != 'gtts' and EDGE_AVAILABLE:
             try:
                 audio = asyncio.run(generate_edge_tts(text, voice, speed, pitch, volume))
-                print(f"✅ Edge TTS success: {voice}")
+                print(f"✅ Edge TTS: {voice}")
             except Exception as e:
                 print(f"❌ Edge TTS failed ({voice}): {e}")
                 audio = None
 
-        # Fallback to gTTS with voice variety
+        # Fallback to gTTS with UNIQUE params per voice
         if audio is None and GTTS_AVAILABLE:
-            print(f"Using gTTS fallback for {voice}")
+            print(f"🔄 gTTS fallback: {voice}")
             audio = generate_gtts_voice(text, voice_info, speed, volume)
 
         if audio is None:
@@ -135,15 +158,11 @@ def generate_tts():
 
         buf = io.BytesIO()
         if fmt == 'mp3':
-            try:
-                audio.export(buf, format='mp3', bitrate='192k')
-            except Exception:
-                audio.export(buf, format='wav'); fmt = 'wav'
+            try: audio.export(buf, format='mp3', bitrate='192k')
+            except: audio.export(buf, format='wav'); fmt = 'wav'
         elif fmt == 'ogg':
-            try:
-                audio.export(buf, format='ogg', codec='libvorbis')
-            except Exception:
-                audio.export(buf, format='wav'); fmt = 'wav'
+            try: audio.export(buf, format='ogg', codec='libvorbis')
+            except: audio.export(buf, format='wav'); fmt = 'wav'
         else:
             audio.export(buf, format='wav')
 
@@ -179,10 +198,11 @@ async def generate_edge_tts(text, voice, speed, pitch, volume):
 
 
 def generate_gtts_voice(text, voice_info, user_speed, user_volume):
+    """Each voice gets unique speed + pitch + accent = different sound"""
     tld         = voice_info.get("tld", "co.in")
     slow        = voice_info.get("slow", False)
     v_speed     = voice_info.get("speed", 1.0) * user_speed
-    pitch_shift = voice_info.get("pitch_shift", 0)
+    pitch_shift = voice_info.get("pitch", 0)
 
     tts = gTTS(text=text, lang='hi', slow=slow, tld=tld)
     buf = io.BytesIO()
@@ -190,11 +210,14 @@ def generate_gtts_voice(text, voice_info, user_speed, user_volume):
     buf.seek(0)
     audio = AudioSegment.from_mp3(buf)
 
-    if abs(v_speed - 1.0) > 0.05:
+    # Speed change
+    if abs(v_speed - 1.0) > 0.03:
         audio = speed_change(audio, v_speed)
 
+    # Pitch shift for gender/voice variety
     if pitch_shift != 0:
-        new_rate = int(audio.frame_rate * (2 ** (pitch_shift / 12.0)))
+        semitones = pitch_shift
+        new_rate = int(audio.frame_rate * (2 ** (semitones / 12.0)))
         audio = audio._spawn(audio.raw_data, overrides={"frame_rate": new_rate})
         audio = audio.set_frame_rate(44100)
 
@@ -235,8 +258,8 @@ def speed_change(audio, speed):
 def preprocess_hindi_text(text, pause_level=3):
     for abbr, full in {
         'PM':'प्रधानमंत्री','CM':'मुख्यमंत्री',
-        'BJP':'बीजेपी','CBI':'सीबीआई','ED':'ईडी',
-        'GDP':'जीडीपी','RBI':'आरबीआई'
+        'BJP':'बीजेपी','CBI':'सीबीआई',
+        'ED':'ईडी','GDP':'जीडीपी','RBI':'आरबीआई'
     }.items():
         text = re.sub(r'\b' + abbr + r'\b', full, text)
     return re.sub(r'\s+', ' ', text).strip()
