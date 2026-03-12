@@ -656,10 +656,10 @@ const VOICES = [
   {id:'hi-IN-PrabhatNeural', name:'Prabhat', lang:'hi', gender:'♂', desc:'औपचारिक पुरुष', engine:'edge'},
   {id:'hi-IN-BabiNeural',    name:'Babi',    lang:'hi', gender:'♀', desc:'मृदु महिला',    engine:'edge'},
   {id:'hi-IN-DivyaNeural',   name:'Divya',   lang:'hi', gender:'♀', desc:'चमकदार महिला', engine:'edge'},
-  // Google Hindi
-  {id:'gtts-hi',             name:'Google HI', lang:'hi', gender:'♀', desc:'Google TTS',  engine:'gtts'},
-  // Fallback browser
-  {id:'browser-hi',          name:'Browser HI',lang:'hi', gender:'⚡', desc:'System Voice', engine:'browser'},
+
+
+
+
 ];
 
 const SAMPLES = [
@@ -702,30 +702,8 @@ window.onload = () => {
   renderVoices(VOICES);
   loadSample(0);
   updateStats();
-  
-  // Get browser speech voices
-  if ('speechSynthesis' in window) {
-    speechSynthesis.onvoiceschanged = loadBrowserVoices;
-    loadBrowserVoices();
-  }
-  
-  // Script listener
   document.getElementById('script').addEventListener('input', updateStats);
 };
-
-function loadBrowserVoices() {
-  const bv = speechSynthesis.getVoices();
-  const hiVoices = bv.filter(v => v.lang.startsWith('hi') || v.lang.startsWith('en-IN'));
-  const extra = hiVoices.map(v => ({
-    id: 'browser-' + v.voiceURI,
-    name: v.name.substring(0,16),
-    lang: v.lang.startsWith('hi') ? 'hi' : 'en',
-    gender: '⚡', desc: 'System Voice', engine: 'browser',
-    _voice: v
-  }));
-  allVoices = [...VOICES, ...extra.filter(e => !VOICES.find(v => v.id === e.id))];
-  renderVoices(allVoices);
-}
 
 // ===== VOICES =====
 function renderVoices(voices) {
@@ -747,7 +725,7 @@ function selectVoice(id) {
 }
 
 function filterVoices(q) {
-  const vlist = allVoices.length ? allVoices : VOICES;
+  const vlist = VOICES;
   const filtered = q ? vlist.filter(v => 
     v.name.toLowerCase().includes(q.toLowerCase()) ||
     v.desc.includes(q) || v.lang.includes(q)
